@@ -26,7 +26,7 @@
   * Se subieron las asignaciones base con código funcional correspondiente al **Tronco Común** (`EstadoProceso.java`, `Reloj.java`, `PCB.java`), la interfaz de consola estilo Linux (`ShellLinux.java`, `Main.java` y el lanzador `./sos`) y el **Módulo 1: Planificador de CPU** (`PlanificadorCPU.java`), desarrollados por **Regina Palomares**.
   * Se verificó la coincidencia exacta de los algoritmos `FCFS`, `SJF` y `Round Robin (q=2)` contra los valores teóricos del caso de control (`6.6`, `4.0` y `7.6`), además de incorporar el algoritmo extra `MLFQ`.
  
-  * * **23 de noviembre de 2026:**  
+* **23 de noviembre de 2026:**  
   * Se completó e integró el **Módulo 2: Administrador de Memoria** (`GestorMemoria.java`) desarrollado por **Juan Pablo López Ahumada**, implementando la paginación virtual por marcos físicos y los algoritmos de reemplazo `FIFO`, `LRU` y `Óptimo` junto con el comando `sim mem-demo` en la shell.
   * Se completó e integró el **Módulo 3: Sistema de Archivos Persistente** (`SistemaArchivos.java`) desarrollado por **David Wong Reyes**, habilitando la persistencia real en `disk.img` (superbloque, bitmap de bloques libres, directorios jerárquicos y cálculo de fragmentación interna), los comandos `ls`, `mkdir`, `touch`, `write`, `cat`, `mv`, `rm`, `df`, así como la simulación de fallos (`corrupt`) y recuperación (`fsck`).
 
