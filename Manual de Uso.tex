@@ -1,0 +1,262 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[table]{xcolor}
+\usepackage[margin=1.8cm]{geometry}
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{listings}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\usepackage{tcolorbox}
+
+% Paleta de colores estilo terminal hacker
+\definecolor{bgblack}{HTML}{0A0E14}
+\definecolor{termcard}{HTML}{111720}
+\definecolor{matrixgreen}{HTML}{00FF41}
+\definecolor{softgreen}{HTML}{80FF9E}
+\definecolor{cyanglow}{HTML}{00E5FF}
+\definecolor{amberwarn}{HTML}{FFB000}
+\definecolor{bordergreen}{HTML}{1E4620}
+
+% Fondo negro y texto verde global
+\pagecolor{bgblack}
+\color{softgreen}
+\renewcommand{\familydefault}{\ttdefault}
+
+% Formato de secciones
+\titleformat{\section}
+{\Large\bfseries\color{matrixgreen}}
+{[\thesection]}{0.6em}{}[\color{bordergreen}\titlerule]
+
+\titleformat{\subsection}
+{\large\bfseries\color{cyanglow}}
+{> \thesubsection}{0.5em}{}
+
+% Encabezados y pies de página
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\color{matrixgreen} root@sos:\~{}\# manual\_usuario.pdf}
+\fancyhead[R]{\small\color{cyanglow} KERNEL 6.0.0-ITESCA}
+\fancyfoot[C]{\small\color{softgreen} -- PAGINA \thepage\ --}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+\renewcommand{\headrule}{\hbox to\headwidth{\color{bordergreen}\leaders\hrule height \headrulewidth\hfill}}
+\renewcommand{\footrule}{\hbox to\headwidth{\color{bordergreen}\leaders\hrule height \footrulewidth\hfill}}
+
+% Cajas tipo consola con fondo blanco y texto oscuro
+\newtcolorbox{consolebox}[1][]{
+	colback=white,
+	coltext=bgblack,
+	colframe=matrixgreen,
+	coltitle=bgblack,
+	fonttitle=\bfseries,
+	title=#1,
+	arc=2pt,
+	boxrule=1pt
+}
+
+\lstset{
+	basicstyle=\ttfamily\small\color{bgblack},
+	backgroundcolor=\color{white},
+	frame=single,
+	rulecolor=\color{matrixgreen},
+	breaklines=true,
+	keepspaces=true,
+	showstringspaces=false
+}
+
+\begin{document}
+	
+	% ==================== PORTADA ====================
+	\begin{titlepage}
+		\thispagestyle{empty}
+		\centering
+		\vspace*{0.8cm}
+		
+		{\color{matrixgreen}\rule{\linewidth}{1.5pt}}\\[0.3cm]
+		{\small\color{cyanglow} [ INSTITUTO TECNOLOGICO SUPERIOR DE CAJEME ]}\\[0.2cm]
+		{\color{matrixgreen}\rule{\linewidth}{1.5pt}}
+		
+		\vspace{1.2cm}
+		{\Huge\bfseries\color{matrixgreen} MANUAL DE OPERACIÓN}\\[0.3cm]
+		{\LARGE\bfseries\color{cyanglow} SISTEMA OPERATIVO SIMULADO (SOS)}\\[0.3cm]
+		{\large\color{softgreen} SOS Linux-Inspired en Java (Sistemas Operativos - Manuel de Jesús Román Román)}
+		
+		\vspace{1.2cm}
+		\begin{consolebox}[>> ESTADO DEL NUCLEO Y MODULOS ACTIVOS]
+			\small
+			\textbf{[OK]} Planificador de CPU (FCFS, SJF, Round Robin, MLFQ)\\
+			\textbf{[OK]} Gestor de Memoria Virtual (Paginacion FIFO, LRU, Optimo)\\
+			\textbf{[OK]} Sistema de Archivos Persistente (\texttt{disk.img} - 32 bloques / 512B)\\
+			\textbf{[OK]} Subsistema de E/S e Interrupciones (FCFS, SCAN, C-SCAN)\\
+			\textbf{[OK]} Modulo de Seguridad (SHA-256 + Salt, Matriz ACL, AES-256-GCM)
+		\end{consolebox}
+		
+		\vspace{1.2cm}
+		{\large\bfseries\color{matrixgreen} // INTEGRANTES DEL EQUIPO}\\[0.4cm]
+		
+		\renewcommand{\arraystretch}{1.4}
+		\begin{tabularx}{\textwidth}{|l|X|c|}
+			\hline
+			\rowcolor{bordergreen}
+			\color{matrixgreen}\textbf{MATRICULA} & \color{matrixgreen}\textbf{NOMBRE COMPLETO} & \color{matrixgreen}\textbf{ROL} \\
+			\hline
+			\rowcolor{termcard} 24130077 & Regina Palomares Quintero  & Tronco Común / Módulo 1 / Módulo 5 / Shell Linux \\
+			\hline
+			\rowcolor{bgblack}  24130595 & Juan Pablo López Ahumada & Módulo 2 \\
+			\hline
+			\rowcolor{termcard} 24130167 & David Wong Reyes & Módulo 3 \\
+			\hline
+			\rowcolor{bgblack}  24130428 & Vanesa Guzmán Sánchez & Módulo 4 / QA \\
+			\hline
+		\end{tabularx}
+		
+		\vfill
+		{\color{amberwarn}\textbf{MATERIA:} Sistemas Operativos}\\[0.2cm]
+		{\color{softgreen}\textbf{DOCENTE:} Nombre del Profesor}\\[0.2cm]
+		{\color{cyanglow}\textbf{FECHA:} Noviembre 2026}
+	\end{titlepage}
+	
+	% ==================== SECCION 1 ====================
+	\section{Despliegue y Ejecucion del Sistema}
+	
+	El simulador SOS se distribuye como un paquete ejecutable multiplataforma (\texttt{sos.jar}) que no requiere dependencias externas adicionales a Java (JDK/JRE 11 o superior).
+	
+	\subsection{Compilacion y Empaquetado (Opcional)}
+	Si se desea regenerar el ejecutable desde el codigo fuente en Linux:
+	\begin{lstlisting}
+		rm -rf bin sos.jar disk.img && mkdir bin
+		javac -d bin $(find src -name "*.java")
+		jar cfe sos.jar sos.Main -C bin .
+	\end{lstlisting}
+	
+	\subsection{Arranque del Simulador}
+	Para iniciar la terminal interactiva (\texttt{tty1}), ejecute en la terminal anfitriona:
+	\begin{lstlisting}
+		java -jar sos.jar
+	\end{lstlisting}
+	Al arrancar por primera vez, el sistema crea automaticamente el archivo binario \texttt{disk.img} en el directorio actual para garantizar la persistencia de carpetas, inodos y permisos entre sesiones.
+	
+	% ==================== SECCION 2 ====================
+	\section{Control de Acceso y Usuarios Predefinidos}
+	
+	El subsistema \texttt{GestorSeguridad} inicializa cuatro perfiles en memoria protegiendo sus credenciales mediante resumenes criptograficos \textbf{SHA-256} con \textit{salt} aleatorio de 16 bytes.
+	
+	\begin{center}
+		\renewcommand{\arraystretch}{1.3}
+		\begin{tabularx}{\textwidth}{|l|l|l|X|}
+			\hline
+			\rowcolor{bordergreen}
+			\color{matrixgreen}\textbf{USUARIO} & \color{matrixgreen}\textbf{CONTRASENA} & \color{matrixgreen}\textbf{NIVEL} & \color{matrixgreen}\textbf{PRIVILEGIOS} \\
+			\hline
+			\rowcolor{termcard} \texttt{docente} & \texttt{prof2026}  & Root (\texttt{\#}) & Control total, modificacion de ACL (\texttt{chmod}) y acceso irrestricto. \\
+			\hline
+			\rowcolor{bgblack}  \texttt{regina}  & \texttt{regina123} & Admin (\texttt{\$}) & Administracion de archivos y asignacion de permisos. \\
+			\hline
+			\rowcolor{termcard} \texttt{ana}     & \texttt{ana123}    & Estandar (\texttt{\$}) & Lectura/escritura sujeta a la Matriz de Control de Acceso. \\
+			\hline
+			\rowcolor{bgblack}  \texttt{bruno}   & \texttt{bruno123}  & Estandar (\texttt{\$}) & Lectura/escritura sujeta a la Matriz de Control de Acceso. \\
+			\hline
+		\end{tabularx}
+	\end{center}
+	
+	% ==================== SECCION 3 ====================
+	\section{Catalogo de Comandos de la Shell}
+	
+	\subsection{Simulacion de Nucleo y Hardware}
+	\begin{tabularx}{\textwidth}{|l|X|}
+		\hline
+		\rowcolor{bordergreen} \color{matrixgreen}\textbf{COMANDO} & \color{matrixgreen}\textbf{DESCRIPCION Y FUNCIONAMIENTO} \\
+		\hline
+		\rowcolor{termcard} \texttt{sim plan-demo} & Ejecuta y compara los algoritmos \textbf{FCFS, SJF, Round Robin y MLFQ} sobre 5 procesos, calculando tiempo de espera, retorno y uso de CPU. \\
+		\hline
+		\rowcolor{bgblack}  \texttt{sim mem-demo}  & Simula paginacion virtual en 3 marcos fisicos comparando \textbf{FIFO, LRU y Optimo} (tasa de aciertos y fallos de pagina). \\
+		\hline
+		\rowcolor{termcard} \texttt{sim io-demo}   & Evalua algoritmos de disco (\textbf{FCFS, SCAN, C-SCAN}) e interrupciones sincronas (\texttt{/dev/sda}) y asincronas (\texttt{/dev/tty0}). \\
+		\hline
+		\rowcolor{bgblack}  \texttt{sim run <arch>} & Ejecuta por lotes una secuencia de comandos guardada en un archivo de texto externo. \\
+		\hline
+	\end{tabularx}
+	
+	\subsection{Navegacion y Gestion del Sistema de Archivos}
+	\begin{tabularx}{\textwidth}{|l|X|}
+		\hline
+		\rowcolor{bordergreen} \color{matrixgreen}\textbf{COMANDO} & \color{matrixgreen}\textbf{DESCRIPCION Y FUNCIONAMIENTO} \\
+		\hline
+		\rowcolor{termcard} \texttt{pwd} / \texttt{ls} & Muestra la ruta actual o lista inodos con propietario, permisos, tamano en bytes y estado (\texttt{[CIFRADO]}, \texttt{[CORRUPTO]}). \\
+		\hline
+		\rowcolor{bgblack}  \texttt{mkdir <dir>} & Crea un subdirectorio asignando 1 bloque libre en el mapa de bits de \texttt{disk.img}. \\
+		\hline
+		\rowcolor{termcard} \texttt{cd <dir>} / \texttt{cd ..} & Cambia el directorio de trabajo actual o regresa al nivel superior. \\
+		\hline
+		\rowcolor{bgblack}  \texttt{touch <arch>} & Crea un inodo de archivo vacio (0 bytes) en la ruta actual. \\
+		\hline
+		\rowcolor{termcard} \texttt{write <arch> <txt>} & Escribe texto en el archivo (requiere permiso \texttt{w}), asigna bloques de 512B y sincroniza en disco. \\
+		\hline
+		\rowcolor{bgblack}  \texttt{cat <arch>} & Imprime el contenido del archivo (requiere permiso \texttt{r}); bloquea la lectura si detecta corrupcion de bloque. \\
+		\hline
+		\rowcolor{termcard} \texttt{mv <viejo> <nuevo>} & Renombra un archivo o directorio actualizando su registro en disco. \\
+		\hline
+		\rowcolor{bgblack}  \texttt{rm <nombre>} & Elimina el archivo o carpeta (requiere permiso \texttt{w}) y libera sus bloques en el bitmap. \\
+		\hline
+	\end{tabularx}
+	
+	\subsection{Diagnostico de Disco, Sesion y Criptografia}
+	\begin{tabularx}{\textwidth}{|l|X|}
+		\hline
+		\rowcolor{bordergreen} \color{matrixgreen}\textbf{COMANDO} & \color{matrixgreen}\textbf{DESCRIPCION Y FUNCIONAMIENTO} \\
+		\hline
+		\rowcolor{termcard} \texttt{df} & Despliega estadisticas de los 32 bloques, mapa visual del \textbf{Bitmap} (\texttt{[\#]}/\texttt{[.]}) y bytes de \textbf{fragmentacion interna}. \\
+		\hline
+		\rowcolor{bgblack}  \texttt{corrupt <arch>} & Simula un fallo fisico/logico marcando el inodo del archivo como danado. \\
+		\hline
+		\rowcolor{termcard} \texttt{fsck} & Audita la integridad del disco, repara inodos corruptos y reconcilia inconsistencias en el bitmap. \\
+		\hline
+		\rowcolor{bgblack}  \texttt{login <u> <p>} & Autentica e intercambia la sesion activa del usuario (alias: \texttt{su}). \\
+		\hline
+		\rowcolor{termcard} \texttt{whoami} / \texttt{clear} & Muestra el usuario en sesion o limpia el bufer visual de la terminal. \\
+		\hline
+		\rowcolor{bgblack}  \texttt{sec-matrix} & Despliega la \textbf{Matriz de Control de Acceso (ACL)} de los archivos en la carpeta actual. \\
+		\hline
+		\rowcolor{termcard} \texttt{chmod <u> <a> <p>} & Asigna permisos (\texttt{r}, \texttt{rw}, \texttt{rwx}) a un usuario sobre un archivo (solo administradores). \\
+		\hline
+		\rowcolor{bgblack}  \texttt{encrypt <a> <clave>} & Cifra el archivo usando \textbf{AES-256-GCM} (llave derivada con PBKDF2) almacenando \texttt{salt + IV + ciphertext}. \\
+		\hline
+		\rowcolor{termcard} \texttt{decrypt <a> <clave>} & Descifra el archivo validando permisos de lectura y etiqueta de autenticidad GCM. \\
+		\hline
+		\rowcolor{bgblack}  \texttt{exit} / \texttt{shutdown} & Sincroniza el estado completo en \texttt{disk.img} y apaga el kernel de forma segura. \\
+		\hline
+	\end{tabularx}
+	
+	% ==================== SECCION 4 ====================
+	\section{Guion de Pruebas Recomendado (Demo)}
+	
+	Para verificar la integracion de persistencia, permisos y cifrado en una sola sesion:
+	
+	\begin{consolebox}[>> SECUENCIA DE VERIFICACION EN VIVO]
+		\begin{verbatim}
+			login docente prof2026
+			mkdir evaluacion
+			cd evaluacion
+			write acta.txt Calificacion final del proyecto: 100
+			encrypt acta.txt claveMaestra2026
+			cat acta.txt
+			login ana ana123
+			decrypt acta.txt claveMaestra2026
+			login docente prof2026
+			chmod ana acta.txt r
+			login ana ana123
+			decrypt acta.txt claveIncorrecta
+			decrypt acta.txt claveMaestra2026
+			cat acta.txt
+			cd ..
+			df
+		\end{verbatim}
+	\end{consolebox}
+	
+	\begin{itemize}
+		\item \textbf{Resultado esperado:} Al intentar descifrar como \texttt{ana} antes del \texttt{chmod}, el sistema deniega el acceso por falta de permiso \texttt{r}. Tras otorgar el permiso, una clave erronea dispara la proteccion de integridad \texttt{AEADBadTagException} de AES-GCM, mientras que la clave correcta restaura el texto original.
+	\end{itemize}
+	
+\end{document}
