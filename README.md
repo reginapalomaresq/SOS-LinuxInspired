@@ -14,16 +14,14 @@
 
 ---
 
-## Integrantes y Distribución de Módulos (Temario)
+## Integrantes y Distribución Real del Trabajo
 
-El desarrollo del proyecto se dividió en **5 módulos funcionales** que cubren todas las unidades de la asignatura, asignados equitativamente entre los miembros del equipo:
-
-| Integrante | Módulo / Unidad de la Materia | Paquetes en Java | Responsabilidades Técnicas |
+| Integrante | Módulos y Unidades Cubiertas | Paquetes / Entregables | Responsabilidades y Trabajo Realizado |
 | :--- | :--- | :--- | :--- |
-| **Regina Palomares** | **Módulo 1:** Núcleo y Planificación de CPU *(Unidad 2)*<br>**Módulo 5:** Seguridad e Integración *(Unidades 1 y 6)* | `sos.core`<br>`sos.cpu`<br>`sos.seguridad`<br>`sos.cli` | • Implementación del ciclo de vida de procesos (`PCB` con 5 estados) y reloj global.<br>• Algoritmos de planificación (**FCFS, SJF, Round Robin y MLFQ**) con métricas de espera y retorno.<br>• Autenticación de usuarios (**SHA-256 + salt**), Matriz de Control de Acceso (`rwx`) y cifrado de archivos (**AES-256-GCM** con PBKDF2).<br>• Desarrollo de la consola interactiva tipo Linux (`ShellLinux`) y ejecución por lotes (`sim run`). |
-| **Juan Pablo López** | **Módulo 2:** Administración de Memoria Virtual *(Unidad 3)* | `sos.memoria` | • Gestión de memoria física dividida en marcos y tablas de páginas por proceso.<br>• Implementación y comparación de algoritmos de reemplazo de páginas (**FIFO, LRU y Óptimo**).<br>• Cálculo de aciertos, fallos de página y tasa porcentual de fallos. |
-| **Vanessa Guzmán** | **Módulo 3:** Administración de Entrada / Salida *(Unidad 4)* | `sos.io` | • Simulación de controladores de dispositivos (`/dev/sda` y `/dev/tty0`) y colas de peticiones.<br>• Manejo de interrupciones síncronas y asíncronas.<br>• Planificación de cabezal de disco (**FCFS, SCAN y C-SCAN**) midiendo el recorrido total en cilindros. |
-| **David Wong** | **Módulo 4:** Sistema de Archivos Persistente *(Unidad 5)* | `sos.fs` | • Persistencia real en disco virtual (`disk.img`) con bloques de 512 bytes.<br>• Estructura jerárquica de directorios, inodos y asignación de espacio mediante *bitmap*.<br>• Cálculo de fragmentación interna, simulación de daños (`corrupt`) y auditoría/reparación con `fsck`. |
+| **Regina Palomares** | **Arquitectura e Integración Total**<br>**Módulo 1:** Núcleo y Planificación de CPU *(Unidad 2)*<br>**Módulo 5:** Seguridad, Criptografía e Interfaz CLI *(Unidades 1 y 6)*<br>**QA, Empaquetado y Documentación** | `sos.Main`<br>`sos.core`<br>`sos.cpu`<br>`sos.seguridad`<br>`sos.cli`<br>`sos.jar`<br>`Manual de Uso.pdf`<br>`README.md` | • Diseño de la arquitectura modular del proyecto y creación del repositorio en GitHub.<br>• Desarrollo del tronco común compartido (`PCB`, `EstadoProceso`, `Reloj`) y la clase principal (`Main.java`).<br>• Implementación del planificador de CPU (**FCFS, SJF, Round Robin y MLFQ**) con métricas de espera y retorno.<br>• Desarrollo completo del módulo de seguridad: autenticación con **SHA-256 + salt**, Matriz de Control de Acceso (`rwx`) y cifrado autenticado **AES-256-GCM** con PBKDF2.<br>• Creación de la consola interactiva tipo Linux (`ShellLinux`), intérprete de comandos y ejecución por lotes (`sim run`).<br>• Integración y depuración global de todos los subsistemas, validación de pruebas finales, empaquetado del ejecutable `sos.jar` y redacción de toda la documentación técnica (`README.md` y Manual de Usuario en LaTeX). |
+| **Juan Pablo López** | **Módulo 2:** Administración de Memoria Virtual *(Unidad 3)* | `sos.memoria` | • Base lógica de paginación virtual sobre marcos físicos.<br>• Algoritmos de reemplazo de páginas (**FIFO, LRU y Óptimo**) con conteo de aciertos y fallos. |
+| **Vanessa Guzmán** | **Módulo 3:** Administración de Entrada / Salida *(Unidad 4)* | `sos.io` | • Base lógica de dispositivos simulados (`/dev/sda`, `/dev/tty0`) e interrupciones.<br>• Algoritmos de planificación de cabezal de disco (**FCFS, SCAN y C-SCAN**). |
+| **David Wong** | **Módulo 4:** Sistema de Archivos Persistente *(Unidad 5)* | `sos.fs` | • Base lógica de directorios jerárquicos, inodos y mapa de bits (*bitmap*) de 32 bloques.<br>• Persistencia en `disk.img`, fragmentación interna y recuperación ante fallos (`fsck`). |
 
 ---
 
@@ -31,8 +29,8 @@ El desarrollo del proyecto se dividió en **5 módulos funcionales** que cubren 
 
 ```text
 SOS-LinuxInspired/
-├── README.md                   <-- Documentación técnica y reparto de módulos
-├── sos.jar                     <-- Paquete ejecutable del simulador
+├── README.md                   <-- Documentación técnica y bitácora del proyecto
+├── sos.jar                     <-- Paquete ejecutable compilado
 ├── disk.img                    <-- Imagen de disco virtual generada automáticamente
 └── src/
     └── sos/
