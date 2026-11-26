@@ -8,50 +8,39 @@
 
 ---
 
-## Integrantes y Reparto de Trabajo
+## Descripción General
 
-| Integrante | Paquetes asignados | Responsabilidad principal |
-| :--- | :--- | :--- |
-| **Palomares Quintero Regina** | `sos.core`, `sos.cpu`, `sos.cli`, `sos.seguridad` | **Módulo 1:** Núcleo compartido (`PCB`, `Reloj`, `EstadoProceso`), Planificador de CPU (`FCFS`, `SJF`, `RR`, `Prioridades` y `MLFQ`), Shell estilo Linux y Seguridad (AES-256-GCM / Matriz de acceso). |
-| **Guzmán Sánchez Vanessa** | `sos.io` | **Módulo 4:** Administración de Entrada/Salida, drivers simulados (`disco` y `terminal`), colas y planificación de cabezal (`FCFS`, `SCAN`, `C-SCAN`). |
-| **López Ahumada Juan Pablo** | `sos.memoria` | **Módulo 2:** Administrador de Memoria, paginación, tabla de páginas por proceso y reemplazo (`FIFO`, `LRU`, `Óptimo`). |
-| **Wong Reyes David** | `sos.fs` | **Módulo 3:** Sistema de Archivos persistente en `disk.img`, superbloque, bitmap, directorios jerárquicos y recuperación (`fsck`). |
+**SOS** (*Simple Operating System*) es un simulador educativo de sistema operativo desarrollado en Java con una interfaz de línea de comandos (CLI) inspirada en GNU/Linux. El proyecto integra en un solo ejecutable (`sos.jar`) los conceptos fundamentales de las **6 unidades de la materia**, operando sobre un núcleo compartido (`PCB`, `Reloj`) y persistencia real en disco mediante `disk.img`.
 
 ---
 
-## Bitácora de Avances del Repositorio
+## Integrantes y Distribución de Módulos (Temario)
 
-* **19 de noviembre de 2026:**  
-  * Se creó el repositorio oficial `SOS-LinuxInspired` con la estructura modular de paquetes en Java (`core`, `cpu`, `memoria`, `fs`, `io`, `seguridad`, `cli`).
-  * Se subieron las asignaciones base con código funcional correspondiente al **Tronco Común** (`EstadoProceso.java`, `Reloj.java`, `PCB.java`), la interfaz de consola estilo Linux (`ShellLinux.java`, `Main.java` y el lanzador `./sos`) y el **Módulo 1: Planificador de CPU** (`PlanificadorCPU.java`), desarrollados por **Regina Palomares**.
-  * Se verificó la coincidencia exacta de los algoritmos `FCFS`, `SJF` y `Round Robin (q=2)` contra los valores teóricos del caso de control (`6.6`, `4.0` y `7.6`), además de incorporar el algoritmo extra `MLFQ`.
- 
-* **23 de noviembre de 2026:**  
-  * Se completó e integró el **Módulo 2: Administrador de Memoria** (`GestorMemoria.java`) desarrollado por **Juan Pablo López Ahumada**, implementando la paginación virtual por marcos físicos y los algoritmos de reemplazo `FIFO`, `LRU` y `Óptimo` junto con el comando `sim mem-demo` en la shell.
-  * Se completó e integró el **Módulo 3: Sistema de Archivos Persistente** (`SistemaArchivos.java`) desarrollado por **David Wong Reyes**, habilitando la persistencia real en `disk.img` (superbloque, bitmap de bloques libres, directorios jerárquicos y cálculo de fragmentación interna), los comandos `ls`, `mkdir`, `touch`, `write`, `cat`, `mv`, `rm`, `df`, así como la simulación de fallos (`corrupt`) y recuperación (`fsck`).
+El desarrollo del proyecto se dividió en **5 módulos funcionales** que cubren todas las unidades de la asignatura, asignados equitativamente entre los miembros del equipo:
+
+| Integrante | Módulo / Unidad de la Materia | Paquetes en Java | Responsabilidades Técnicas |
+| :--- | :--- | :--- | :--- |
+| **Regina Palomares** | **Módulo 1:** Núcleo y Planificación de CPU *(Unidad 2)*<br>**Módulo 5:** Seguridad e Integración *(Unidades 1 y 6)* | `sos.core`<br>`sos.cpu`<br>`sos.seguridad`<br>`sos.cli` | • Implementación del ciclo de vida de procesos (`PCB` con 5 estados) y reloj global.<br>• Algoritmos de planificación (**FCFS, SJF, Round Robin y MLFQ**) con métricas de espera y retorno.<br>• Autenticación de usuarios (**SHA-256 + salt**), Matriz de Control de Acceso (`rwx`) y cifrado de archivos (**AES-256-GCM** con PBKDF2).<br>• Desarrollo de la consola interactiva tipo Linux (`ShellLinux`) y ejecución por lotes (`sim run`). |
+| **Juan Pablo López** | **Módulo 2:** Administración de Memoria Virtual *(Unidad 3)* | `sos.memoria` | • Gestión de memoria física dividida en marcos y tablas de páginas por proceso.<br>• Implementación y comparación de algoritmos de reemplazo de páginas (**FIFO, LRU y Óptimo**).<br>• Cálculo de aciertos, fallos de página y tasa porcentual de fallos. |
+| **Vanessa Guzmán** | **Módulo 3:** Administración de Entrada / Salida *(Unidad 4)* | `sos.io` | • Simulación de controladores de dispositivos (`/dev/sda` y `/dev/tty0`) y colas de peticiones.<br>• Manejo de interrupciones síncronas y asíncronas.<br>• Planificación de cabezal de disco (**FCFS, SCAN y C-SCAN**) midiendo el recorrido total en cilindros. |
+| **David Wong** | **Módulo 4:** Sistema de Archivos Persistente *(Unidad 5)* | `sos.fs` | • Persistencia real en disco virtual (`disk.img`) con bloques de 512 bytes.<br>• Estructura jerárquica de directorios, inodos y asignación de espacio mediante *bitmap*.<br>• Cálculo de fragmentación interna, simulación de daños (`corrupt`) y auditoría/reparación con `fsck`. |
 
 ---
-## Comandos de la CLI
-| `sim mem-demo` | Ejecuta la traza de paginación comparando los algoritmos `FIFO`, `LRU` y `Óptimo` en memoria física. |
-| `ls` / `mkdir` / `touch` | Lista el contenido del directorio actual, crea carpetas o crea archivos vacíos en `disk.img`. |
-| `write` / `cat` / `mv` / `rm` | Escribe contenido, lee archivos, renombra o elimina entradas del sistema de archivos. |
-| `df` | Muestra el mapa de ocupación del bitmap de `disk.img`, bloques libres y fragmentación interna. |
-| `corrupt` / `fsck` | Simula la corrupción de un bloque en `disk.img` y ejecuta la verificación y reparación de inconsistencias. |
 
 ## Arquitectura del Proyecto
 
 ```text
 SOS-LinuxInspired/
-├── sos                         <-- Script ejecutable en terminal Linux (./sos)
-├── README.md                   <-- Documentación técnica, acuerdos y bitácora
-├── escenarios/                 <-- Archivos .txt con cargas de trabajo y demos
+├── README.md                   <-- Documentación técnica y reparto de módulos
+├── sos.jar                     <-- Paquete ejecutable del simulador
+├── disk.img                    <-- Imagen de disco virtual generada automáticamente
 └── src/
     └── sos/
-        ├── Main.java           <-- Punto de entrada único del simulador
-        ├── core/               <-- Contratos compartidos (PCB, EstadoProceso, Reloj)
-        ├── cpu/                <-- Módulo 1: Planificador de CPU (Unidad 2)
-        ├── memoria/            <-- Módulo 2: Administrador de Memoria (Unidad 3)
-        ├── fs/                 <-- Módulo 3: Sistema de Archivos (Unidad 5)
-        ├── io/                 <-- Módulo 4: Entrada/Salida y Drivers (Unidad 4)
-        ├── seguridad/          <-- Módulo 5: Autenticación, Permisos y Cifrado (Unidad 6)
-        └── cli/                <-- Consola interactiva estilo GNU/Linux (ShellLinux)
+        ├── Main.java           <-- Punto de entrada único del sistema
+        ├── core/               <-- Estructuras base (PCB, EstadoProceso, Reloj)
+        ├── cpu/                <-- Planificador de CPU (FCFS, SJF, RR, MLFQ)
+        ├── memoria/            <-- Gestor de Memoria Virtual (FIFO, LRU, Óptimo)
+        ├── io/                 <-- Gestor de E/S y Disco (FCFS, SCAN, C-SCAN)
+        ├── fs/                 <-- Sistema de Archivos, Bitmap, Inodos y fsck
+        ├── seguridad/          <-- Autenticación SHA-256, ACL y Cifrado AES-256-GCM
+        └── cli/                <-- Intérprete de comandos estilo GNU/Linux
